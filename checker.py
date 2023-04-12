@@ -1,60 +1,83 @@
 import itertools
+from itertools import permutations, product
 from personalInfo import PersonalInfo
 
 
 class Checker:
 
-    def passwordChecker(personalInfo: PersonalInfo, password):
-        options=[]
+    def passwordGenerator(personalInfo:PersonalInfo):
+        # Create a matrix of all options
+        passwords=[]
         passwordOptions= []
-        options.extend(Checker.checkPossibleString(personalInfo.stringData, password))
-        options.extend(Checker.checkPossibleDates(personalInfo.dateData, password))
-        for length in range(len(options)+1):
-            passwordOptions.extend(itertools.combinations(options, length))
-        return passwordOptions
+        results=[]
+        end=[]
+        passwords.extend(Checker.getPossibleStrings(personalInfo.stringData))
+        for optionList in Checker.getPossibleDates(personalInfo.dateData):
+            passwords.extend(optionList)
+        # Find all possible combinations using up to 5 elements
+        for length in range(max(6,len(passwords)+1)):
+            passwordOptions.extend(itertools.combinations(passwords, length))
+        
+        for combination in passwordOptions:
+            results.extend(itertools.product(*combination))
 
+        for tuple in results:
+            combinations =[]
+            combinations=permutations(tuple,len(tuple))
+            for option in combinations:
+                password = ""
+                for element in option:
+                    password += element
+                end.append(password)
+        
+        return end
 
-    @staticmethod 
-    def checkPossibleString(list, password):
-        options = []
-        found = []
+    # Return all the posibilities of each string (list of lists)
+    @staticmethod
+    def getPossibleStrings(list):
+        result = []
         for word in list:
-           options.extend(Checker.stringOptions(word))
-        for option in options:
-            if option in password:
-                found.append(option)
-        return found
+            options = []
+            options.extend(Checker.stringOptions(word))
+            result.append(options)
+        return result
 
-    @staticmethod 
-    def checkPossibleDates(list, password):
-        options = []
-        found = []
+    # Return all the posibilities of each date (list of lists)
+    @staticmethod
+    def getPossibleDates(list):
+        result=[]
         for date in list:
-            options.extend(Checker.dayConverter(date.day))
-            options.extend(Checker.monthConverter(date.month))
-            options.extend(Checker.yearConverter(date.year))
+            options=[]
+            options.append(Checker.dayConverter(date.day))
+            options.append(Checker.monthConverter(date.month))
+            options.append(Checker.yearConverter(date.year))
+            result.append(options)
+        return result
 
-        for option in options:
-            if option in password:
-                found.append(option)
-        return found
-
-
+    # All the options of a day
     @staticmethod        
     def dayConverter(day):
-       return [*set([day,str(day).lstrip("0")])]
+        return [*set([str(day),"0" + str(day)])] if day<10 else [*set([str(day),str(day)])]
 
+    # All the numerical and literal options of a month
     @staticmethod
     def monthConverter(month):
-        return [*set([month,str(month).lstrip("0")].extend( Checker.monthToLetter(month)))]
+        result=[]
+        result.extend([*set([str(month),str(month).lstrip("0")])])
+        result.extend(Checker.monthToLetter(str(month)))
+        return result
 
+    # All the options of a year
     @staticmethod
+    # TODO 2k21 bullshit etc
     def yearConverter(year):
-        return [*set(year,year % 100)]
+        return [*set([str(year),str(year % 100)])]
 
 
+    # All the litteral options of a month
     @staticmethod
     def monthToLetter(month):
+        result =''
         match month:
             case "01":
                 result= "janvier"
@@ -80,11 +103,13 @@ class Checker:
                 result= "novembre"
             case "12":
                 result ="decembre"
+        # print("result: " + result)
+        # print(Checker.stringOptions(result))
         return Checker.stringOptions(result)
     
-
+    # All the options of a string
     @staticmethod
-    def stringOptions(word):
+    def stringOptions(word: str):
         # TODO leet
         return [word.upper(),word.lower(), word.capitalize()]
         

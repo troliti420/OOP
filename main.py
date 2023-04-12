@@ -9,13 +9,9 @@ import datetime
 # Defining main function
 def main():
    print("Welcome to Password Checker")
-   password = "Dan08"
-   p = PersonalInfo(["test","dan","poo"],[datetime.date.today()])
-
-   print(Checker.passwordChecker(p, password))
-
-   print(datetime.date.today().year)
-  
+   personalInfo = PersonalInfo(["test","dan"],[datetime.date.today()])
+   # ,datetime.date(1998, 11, 8)
+   print(Checker.passwordGenerator(personalInfo)) 
   
 # Using the special variable 
 # __name__
