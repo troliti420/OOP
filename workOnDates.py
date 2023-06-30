@@ -2,7 +2,7 @@ from personalInfo import PersonalInfo
 from optionDate import OptionDate
 from workOnStrings import WorkOnStrings
 
-class WorkOnDates:
+class WorkOnDates(WorkOnStrings):
     
     # All the options of a day      
     def dayConverter(self, day ):
@@ -23,7 +23,7 @@ class WorkOnDates:
     # All the litteral options of a month
     def monthToLetter(self, month):
         result =''
-        workOnStrings =WorkOnStrings()
+        # workOnStrings =WorkOnStrings()
         match month:
             case "01":
                 result= "janvier"
@@ -49,4 +49,8 @@ class WorkOnDates:
                 result= "novembre"
             case "12":
                 result ="decembre"
-        return workOnStrings.stringOptions(result)
+        return WorkOnStrings.stringOptions(result)
+    
+    #Print dans la console du travail effectué
+    def printMessage(self):
+        print("je modifie des dates")

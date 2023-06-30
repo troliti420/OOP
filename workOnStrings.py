@@ -1,6 +1,9 @@
 import unicodedata
 
-class WorkOnStrings:
+from printMessageInterface import PrintMessage
+
+class WorkOnStrings(PrintMessage):
+    message= "je modifie des mots"
     
     # Remove accents from words
     @staticmethod
@@ -55,5 +58,11 @@ class WorkOnStrings:
             
         return stringOptionResult
     
+    # All the options of a string
+    @classmethod
     def stringOptions(self, word: str):
         return [word.upper(),word.lower(), word.capitalize()]
+    
+    #Print dans la console du travail effectué
+    def printMessage(self):
+        print(WorkOnStrings.message)
